@@ -1,91 +1,68 @@
-<!DOCTYPE html>              
-<html lang="fr">              
-<head>              
-<meta charset="UTF-8">              
-<meta name="viewport" content="width=device-width, initial-scale=1.0">              
-<title>Records</title>              
-<style>              
-/* --- Global styles --- */              
-html, body{              
-  margin:0;              
-  padding:0;              
-  background:#d9d9d9;              
-  font-family:sans-serif;              
-  height:100%;              
-  overflow:hidden;              
-}              
-body{              
-  display:flex;              
-  flex-direction:column;              
-  align-items:center;              
-  min-height:100vh;              
-}              
-*{-webkit-tap-highlight-color:transparent;}              
-              
-.empty{              
-  color:#555;              
-  font-size:14px;              
-  text-align:center;              
-  position:fixed;              
-  top:50%;              
-  left:50%;              
-  transform:translate(-50%,-50%);              
-}              
-              
-/* --- Loader global --- */              
-#loader{              
-  position:fixed;              
-  top:0;              
-  left:0;              
-  width:100%;              
-  height:100%;              
-  background:rgba(255,255,255,0.9);              
-  display:flex;              
-  justify-content:center;              
-  align-items:center;              
-  z-index:200;              
-}              
-.spinner{              
-  border:6px solid #eee;              
-  border-top:6px solid #333;              
-  border-radius:50%;              
-  width:50px;              
-  height:50px;              
-  animation: spin 1s linear infinite;              
-}              
-@keyframes spin{              
-  0% { transform: rotate(0deg);}              
-  100% { transform: rotate(360deg);}              
-}              
-              
-/* --- Plus button --- */              
-.plus-btn{              
-  position:fixed;              
-  bottom:25px;              
-  right:25px;              
-  width:60px;              
-  height:60px;              
-  background:white;              
-  border-radius:50%;              
-  display:flex;              
-  align-items:center;              
-  justify-content:center;              
-  box-shadow:0 6px 15px rgba(0,0,0,0.2);              
-  cursor:pointer;              
-  z-index:10;              
-}              
-.plus-btn svg{              
-  width:28px;              
-  height:28px;              
-  fill:black;              
-  transition:transform 0.3s;              
-}              
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Records</title>
+<style>
+/* --- Global styles --- */
+html, body{
+  margin:0;
+  padding:0;
+  background:#d9d9d9;
+  font-family:sans-serif;
+  height:100%;
+  overflow:hidden;
+}
+body{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+}
+*{-webkit-tap-highlight-color:transparent;}
 
-/* --- Settings button (nouveau) --- */
-.settings-btn{
+.empty{
+  color:#555;
+  font-size:14px;
+  text-align:center;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+}
+
+/* --- Loader global --- */
+#loader{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(255,255,255,0.9);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:200;
+}
+.spinner{
+  border:6px solid #eee;
+  border-top:6px solid #333;
+  border-radius:50%;
+  width:50px;
+  height:50px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin{
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+/* --- Plus button --- */
+.plus-btn{
   position:fixed;
   bottom:25px;
-  left:25px;
+  right:25px;
   width:60px;
   height:60px;
   background:white;
@@ -97,288 +74,608 @@ body{
   cursor:pointer;
   z-index:10;
 }
-.settings-btn svg{
+.plus-btn svg{
   width:28px;
   height:28px;
   fill:black;
+  transition:transform 0.3s;
 }
-              
-/* --- Form --- */              
-.dynamic-form{              
-  position:fixed;              
-  top:0;              
-  right:0;              
-  height:100%;              
-  width:350px;              
-  background:white;              
-  box-shadow:-4px 0 20px rgba(0,0,0,0.25);              
-  display:flex;              
-  flex-direction:column;              
-  padding:20px;              
-  gap:15px;              
-  transform:translateX(100%);              
-  transition:transform 0.3s;              
-  justify-content:center;              
-}              
-.dynamic-form.show{transform:translateX(0);}              
-.image-container{              
-  display:flex;              
-  align-items:center;              
-  gap:10px;              
-}              
-.add-image-btn{              
-  width:60px;              
-  height:60px;              
-  background:#eee;              
-  border:1px solid #ccc;              
-  border-radius:8px;              
-  display:flex;              
-  align-items:center;              
-  justify-content:center;              
-  cursor:pointer;              
-  font-weight:bold;              
-  position:relative;              
-  overflow:hidden;              
-  transition:border 0.3s;              
-}              
-.add-image-btn.invalid{              
-  border:2px solid red;              
-}              
-.add-image-btn span{              
-  position:absolute;              
-  left:70px;              
-  color:#555;              
-  font-size:14px;              
-}              
-.img-preview{              
-  width:60px;              
-  height:60px;              
-  border:1px solid #ccc;              
-  border-radius:8px;              
-  object-fit:cover;              
-  display:none;              
-}              
-.dynamic-form input[type=file]{display:none;}              
-.dynamic-form input{              
-  border:1px solid #ccc;              
-  border-radius:8px;              
-  padding:8px;              
-  transition:border 0.3s;              
-}              
-.dynamic-form input.invalid{              
-  border:2px solid red;              
-}              
-.dynamic-form button.submit{              
-  background:#333;              
-  color:white;              
-  border:none;              
-  border-radius:8px;              
-  padding:8px;              
-  cursor:pointer;              
-}              
-              
-/* --- Popup --- */              
-.popup-overlay{              
-  position:fixed;              
-  top:0;              
-  left:0;              
-  width:100%;              
-  height:100%;              
-  background:rgba(0,0,0,0.5);              
-  display:none;              
-  align-items:center;              
-  justify-content:center;              
-  z-index:20;              
-}              
-.popup{              
-  background:white;              
-  padding:20px;              
-  border-radius:12px;              
-  text-align:center;              
-  display:flex;              
-  flex-direction:column;              
-  gap:15px;              
-  max-width:90%;              
-}              
-.popup .actions{              
-  display:flex;              
-  justify-content:space-around;              
-}              
-.popup button{              
-  border:none;              
-  padding:8px 16px;              
-  border-radius:8px;              
-  cursor:pointer;              
-}              
-.oui{background:red;color:white;}              
-.non{background:#333;color:white;}              
-              
-/* --- List --- */              
-h1{              
-  text-align:center;              
-  margin-top:10px;              
-  color:#333;              
-}              
-.message-list{              
-  list-style:none;              
-  padding:0;              
-  width:100%;              
-  max-width:600px;              
-  margin:10px auto 30px auto;              
-  max-height:calc(100vh - 100px);              
-  overflow-y:auto;              
-  padding-bottom:30px;              
-}              
-.message{              
-  display:flex;              
-  align-items:center;              
-  background:white;              
-  margin-bottom:15px;              
-  padding:10px;              
-  border-radius:8px;              
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);              
-  width:90%;              
-  max-width:500px;              
-  margin-left:auto;              
-  margin-right:auto;              
-  cursor:pointer;              
-  position:relative;              
-}              
-.message img{              
-  width:60px;              
-  height:60px;              
-  object-fit:cover;              
-  border-radius:12px;              
-  margin-right:15px;              
-  display:none;              
-}              
-.img-loader{              
-  position:absolute;              
-  left:0; top:0;              
-  width:60px; height:60px;              
-  border-radius:12px;              
-  background:rgba(255,255,255,0.7);              
-  display:flex;              
-  justify-content:center;              
-  align-items:center;              
-}              
-.img-loader .spinner{              
-  width:20px;              
-  height:20px;              
-  border-width:3px;              
-}              
-              
-/* --- Modal --- */              
-.modal{              
-  display:none;              
-  position:fixed;              
-  top:0;              
-  left:0;              
-  width:100%;              
-  height:100%;              
-  background:rgba(0,0,0,0.7);              
-  justify-content:center;              
-  align-items:center;              
-  z-index:100;              
-  overflow:auto;              
-}              
-.modal-content{              
-  background:white;              
-  padding:20px;              
-  border-radius:10px;              
-  max-width:90%;              
-  max-height:90%;              
-  text-align:center;              
-  position:relative;              
-  display:flex;              
-  flex-direction:column;              
-  align-items:center;              
-  overflow:hidden;              
-}              
-.modal-content img{              
-  max-width:100%;              
-  max-height:70vh;              
-  height:auto;              
-  width:auto;              
-  object-fit:contain;              
-  margin-top:10px;              
-}              
-.close{              
-  position:absolute;              
-  top:10px;              
-  right:15px;              
-  font-size:24px;              
-  cursor:pointer;              
-}              
-</style>              
-</head>              
-<body>              
-              
-<div id="loader">              
-  <div class="spinner"></div>              
-</div>              
-              
-<div class="empty" id="emptyMsg">Aucun records</div>              
-<h1>RECORDS</h1>              
-<ul class="message-list" id="messageList"></ul>              
-              
-<!-- Bouton + -->
-<div class="plus-btn" id="plusBtn">              
-<svg viewBox="0 0 24 24" id="svgIcon">              
-<path d="M11 5h2v14h-2z"/>              
-<path d="M5 11h14v2H5z"/>              
-</svg>              
-</div>              
 
-<!-- Bouton engrenage -->
-<div class="settings-btn" id="settingsBtn">
-<svg viewBox="0 0 24 24">
-<path d="M19.14,12.94a7.49,7.49,0,0,0,.05-.94,7.49,7.49,0,0,0-.05-.94l2.11-1.65a.5.5,0,0,0,.12-.63l-2-3.46a.5.5,0,0,0-.6-.22l-2.49,1a7.28,7.28,0,0,0-1.63-.94l-.38-2.65A.5.5,0,0,0,13.8,3H10.2a.5.5,0,0,0-.49.41L9.33,6.06a7.28,7.28,0,0,0-1.63.94l-2.49-1a.5.5,0,0,0-.6.22l-2,3.46a.5.5,0,0,0,.12.63L4.86,11.06a7.49,7.49,0,0,0-.05.94,7.49,7.49,0,0,0,.05.94L2.75,14.59a.5.5,0,0,0-.12.63l2,3.46a.5.5,0,0,0,.6.22l2.49-1a7.28,7.28,0,0,0,1.63.94l.38,2.65a.5.5,0,0,0,.49.41h3.6a.5.5,0,0,0,.49-.41l.38-2.65a7.28,7.28,0,0,0,1.63-.94l2.49,1a.5.5,0,0,0,.6-.22l2-3.46a.5.5,0,0,0-.12-.63ZM12,15.5A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/>
+/* --- Form --- */
+.dynamic-form{
+  position:fixed;
+  top:0;
+  right:0;
+  height:100%;
+  width:350px;
+  background:white;
+  box-shadow:-4px 0 20px rgba(0,0,0,0.25);
+  display:flex;
+  flex-direction:column;
+  padding:20px;
+  gap:15px;
+  transform:translateX(100%);
+  transition:transform 0.3s;
+  justify-content:center;
+}
+.dynamic-form.show{transform:translateX(0);}
+.image-container{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.add-image-btn{
+  width:60px;
+  height:60px;
+  background:#eee;
+  border:1px solid #ccc;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-weight:bold;
+  position:relative;
+  overflow:hidden;
+  transition:border 0.3s;
+}
+.add-image-btn.invalid{
+  border:2px solid red;
+}
+.add-image-btn span{
+  position:absolute;
+  left:70px;
+  color:#555;
+  font-size:14px;
+}
+.img-preview{
+  width:60px;
+  height:60px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  object-fit:cover;
+  display:none;
+}
+.dynamic-form input[type=file]{display:none;}
+.dynamic-form input{
+  border:1px solid #ccc;
+  border-radius:8px;
+  padding:8px;
+  transition:border 0.3s;
+}
+.dynamic-form input.invalid{
+  border:2px solid red;
+}
+.dynamic-form button.submit{
+  background:#333;
+  color:white;
+  border:none;
+  border-radius:8px;
+  padding:8px;
+  cursor:pointer;
+}
+
+/* --- Popup (annuler + suppression) --- */
+.popup-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:20;
+}
+.popup{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  max-width:90%;
+}
+.popup .actions{
+  display:flex;
+  justify-content:space-around;
+}
+.popup button{
+  border:none;
+  padding:8px 16px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.oui{background:red;color:white;}
+.non{background:#333;color:white;}
+
+/* --- Admin controls (toujours visibles) --- */
+.admin-controls{
+  position:absolute;
+  top:10px;
+  right:10px;
+  display:flex;
+  gap:8px;
+}
+.admin-controls button{
+  background:none;
+  border:none;
+  font-size:18px;
+  cursor:pointer;
+  padding:5px;
+  opacity:0.8;
+  transition: all 0.2s;
+}
+.admin-controls button:hover{
+  opacity:1;
+  transform:scale(1.2);
+}
+
+/* --- List --- */
+h1{
+  text-align:center;
+  margin-top:10px;
+  color:#333;
+}
+.message-list{
+  list-style:none;
+  padding:0;
+  width:100%;
+  max-width:600px;
+  margin:10px auto 30px auto;
+  max-height:calc(100vh - 100px);
+  overflow-y:auto;
+  padding-bottom:30px;
+}
+.message{
+  display:flex;
+  align-items:center;
+  background:white;
+  margin-bottom:15px;
+  padding:10px;
+  border-radius:8px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  width:90%;
+  max-width:500px;
+  margin-left:auto;
+  margin-right:auto;
+  cursor:pointer;
+  position:relative;
+}
+.message img{
+  width:60px;
+  height:60px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-right:15px;
+  display:none;
+}
+.img-loader{
+  position:absolute;
+  left:0; top:0;
+  width:60px; height:60px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.7);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.img-loader .spinner{
+  width:20px;
+  height:20px;
+  border-width:3px;
+}
+
+/* --- Modal --- */
+.modal{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  justify-content:center;
+  align-items:center;
+  z-index:100;
+  overflow:auto;
+}
+.modal-content{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  max-width:90%;
+  max-height:90%;
+  text-align:center;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  overflow:hidden;
+}
+.modal-content img{
+  max-width:100%;
+  max-height:70vh;
+  height:auto;
+  width:auto;
+  object-fit:contain;
+  margin-top:10px;
+}
+.close{
+  position:absolute;
+  top:10px;
+  right:15px;
+  font-size:24px;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- Loader global -->
+<div id="loader">
+  <div class="spinner"></div>
+</div>
+
+<div class="empty" id="emptyMsg">Aucun records</div>
+<h1>RECORDS</h1>
+<ul class="message-list" id="messageList"></ul>
+
+<!-- Bouton + -->
+<div class="plus-btn" id="plusBtn">
+<svg viewBox="0 0 24 24" id="svgIcon">
+<path d="M11 5h2v14h-2z"/>
+<path d="M5 11h14v2H5z"/>
 </svg>
 </div>
-              
-<script type="module">              
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'              
-              
-const supabaseUrl = 'https://ewmkchquuaenftefgokr.supabase.co'              
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV3bWtjaHF1dWFlbmZ0ZWZnb2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1ODk1MDMsImV4cCI6MjA4OTE2NTUwM30.t-JN5k3-ByycVNfaE62-NOJCbcpnHf1v0YoQ3926ebo'              
-const supabase = createClient(supabaseUrl, supabaseKey)              
-              
-const settingsBtn = document.getElementById("settingsBtn")
-settingsBtn.onclick = () => {
-  alert("Bouton paramètres (à personnaliser)")
+
+<!-- Popup annuler formulaire -->
+<div class="popup-overlay" id="popupOverlay">
+<div class="popup">
+<div>Voulez-vous annuler ?</div>
+<div class="actions">
+<button class="non" id="nonBtn">Non</button>
+<button class="oui" id="ouiBtn">Oui</button>
+</div>
+</div>
+</div>
+
+<!-- Popup suppression -->
+<div class="popup-overlay" id="deletePopup">
+<div class="popup">
+<div id="deleteConfirmText">Voulez-vous supprimer ce record ?</div>
+<div class="actions">
+<button class="non" id="deleteNonBtn">Non</button>
+<button class="oui" id="deleteOuiBtn">Oui</button>
+</div>
+</div>
+</div>
+
+<!-- Modal visualisation -->
+<div class="modal" id="modal">
+<div class="modal-content">
+<span class="close" id="closeModal">&times;</span>
+<div id="modalPseudo" style="font-weight:bold"></div>
+<div id="modalScore"></div>
+<img id="modalImg">
+</div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const supabaseUrl = 'https://ewmkchquuaenftefgokr.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV3bWtjaHF1dWFlbmZ0ZWZnb2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1ODk1MDMsImV4cCI6MjA4OTE2NTUwM30.t-JN5k3-ByycVNfaE62-NOJCbcpnHf1v0YoQ3926ebo'
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+// DOM
+const plusBtn = document.getElementById("plusBtn")
+const svgIcon = document.getElementById("svgIcon")
+const popupOverlay = document.getElementById("popupOverlay")
+const ouiBtn = document.getElementById("ouiBtn")
+const nonBtn = document.getElementById("nonBtn")
+const deletePopup = document.getElementById("deletePopup")
+const deleteOuiBtn = document.getElementById("deleteOuiBtn")
+const deleteNonBtn = document.getElementById("deleteNonBtn")
+const deleteConfirmText = document.getElementById("deleteConfirmText")
+const emptyMsg = document.getElementById("emptyMsg")
+const messageList = document.getElementById("messageList")
+const modal = document.getElementById("modal")
+const closeModal = document.getElementById("closeModal")
+const modalPseudo = document.getElementById("modalPseudo")
+const modalScore = document.getElementById("modalScore")
+const modalImg = document.getElementById("modalImg")
+const loader = document.getElementById("loader")
+
+let formOpen = false
+let dynamicForm = null
+let currentDeleteLi = null
+
+// Mode admin TOUJOURS actif → plus de password ni de toggle
+
+// --- Form dynamique (ajout OU modification) ---
+function openDynamicForm(editData = null) {
+  dynamicForm = document.createElement("div")
+  dynamicForm.className = "dynamic-form"
+  dynamicForm.innerHTML = `
+    <div class="image-container">
+      <div class="add-image-btn">IMG <span>Aucune image ajoutée</span></div>
+      <img class="img-preview">
+    </div>
+    <input type="file" accept="image/*">
+    <input type="text" placeholder="Pseudo">
+    <input type="number" placeholder="Score">
+    <button class="submit">Ajouter</button>
+  `
+  document.body.appendChild(dynamicForm)
+
+  const addBtn = dynamicForm.querySelector(".add-image-btn")
+  const fileInput = dynamicForm.querySelector("input[type=file]")
+  const preview = dynamicForm.querySelector(".img-preview")
+  const status = addBtn.querySelector("span")
+  const pseudoInput = dynamicForm.querySelector('input[type="text"]')
+  const scoreInput = dynamicForm.querySelector('input[type="number"]')
+  const submitBtn = dynamicForm.querySelector(".submit")
+
+  // Pré-remplissage si édition
+  let originalImageUrl = null
+  let editingId = null
+  if (editData) {
+    pseudoInput.value = editData.pseudo
+    scoreInput.value = editData.score
+    preview.src = editData.image_url
+    preview.style.display = "block"
+    status.style.display = "none"
+    status.textContent = "Image actuelle"
+    submitBtn.textContent = "Modifier"
+    originalImageUrl = editData.image_url
+    editingId = editData.id
+  }
+
+  addBtn.onclick = () => fileInput.click()
+  fileInput.onchange = () => {
+    if (fileInput.files.length) {
+      status.style.display = "none"
+      addBtn.classList.remove("invalid")
+      const reader = new FileReader()
+      reader.onload = e => {
+        preview.src = e.target.result
+        preview.style.display = "block"
+      }
+      reader.readAsDataURL(fileInput.files[0])
+    }
+  }
+  pseudoInput.oninput = () => pseudoInput.classList.remove("invalid")
+  scoreInput.oninput = () => scoreInput.classList.remove("invalid")
+
+  submitBtn.onclick = async () => {
+    let valid = true
+    const hasNewImage = fileInput.files.length > 0
+
+    if (!editingId && !hasNewImage) {
+      addBtn.classList.add("invalid")
+      valid = false
+    } else {
+      addBtn.classList.remove("invalid")
+    }
+    if (!pseudoInput.value.trim()) { pseudoInput.classList.add("invalid"); valid = false } else pseudoInput.classList.remove("invalid")
+    if (!scoreInput.value.trim()) { scoreInput.classList.add("invalid"); valid = false } else scoreInput.classList.remove("invalid")
+    if (!valid) return
+
+    const pseudo = pseudoInput.value.trim()
+    const score = parseFloat(scoreInput.value.trim())
+    const image_url = hasNewImage ? preview.src : originalImageUrl
+
+    loader.style.display = "flex"
+
+    if (editingId) {
+      // Modification
+      const { error } = await supabase
+        .from('records')
+        .update({ pseudo, score, image_url })
+        .eq('id', editingId)
+
+      if (error) {
+        alert("Erreur modification : " + error.message)
+        loader.style.display = "none"
+        return
+      }
+
+      // Mise à jour visuelle
+      const li = messageList.querySelector(`li[data-id="${editingId}"]`)
+      if (li) {
+        li.querySelector('.pseudo').textContent = pseudo
+        li.querySelector('.score').textContent = score
+        li.dataset.score = score
+
+        const imgEl = li.querySelector('img')
+        const imgLoader = li.querySelector('.img-loader')
+
+        if (hasNewImage) {
+          imgEl.style.display = "none"
+          imgLoader.style.display = "flex"
+          const tempImg = new Image()
+          tempImg.src = image_url
+          tempImg.onload = () => {
+            imgEl.src = image_url
+            imgEl.style.display = "block"
+            imgLoader.style.display = "none"
+          }
+        }
+      }
+      sortListDesc()
+      loader.style.display = "none"
+      removeForm()
+    } else {
+      // Ajout
+      const { data, error } = await supabase
+        .from('records')
+        .insert([{ pseudo, score, image_url }])
+        .select()
+
+      if (error) {
+        alert("Erreur : " + error.message)
+        loader.style.display = "none"
+        return
+      }
+
+      const newRecord = data[0]
+      const tempImg = new Image()
+      tempImg.src = image_url
+      tempImg.onload = () => {
+        addRecord(newRecord.pseudo, newRecord.score, newRecord.image_url, newRecord.id)
+        loader.style.display = "none"
+        removeForm()
+      }
+    }
+  }
+
+  requestAnimationFrame(() => dynamicForm.classList.add("show"))
+  svgIcon.style.transform = "rotate(45deg)"
+  formOpen = true
 }
-              
-// (tout le reste du script est STRICTEMENT inchangé)
-              
-const plusBtn = document.getElementById("plusBtn")              
-const svgIcon = document.getElementById("svgIcon")              
-const popupOverlay = document.getElementById("popupOverlay")              
-const ouiBtn = document.getElementById("ouiBtn")              
-const nonBtn = document.getElementById("nonBtn")              
-const emptyMsg = document.getElementById("emptyMsg")              
-let formOpen = false              
-let dynamicForm = null              
-const messageList = document.getElementById("messageList")              
-const modal = document.getElementById("modal")              
-const closeModal = document.getElementById("closeModal")              
-const modalPseudo = document.getElementById("modalPseudo")              
-const modalScore = document.getElementById("modalScore")              
-const modalImg = document.getElementById("modalImg")              
-const loader = document.getElementById("loader")              
-              
-// ... (reste du code inchangé)
-              
-async function loadRecords(){              
-  loader.style.display="flex"              
-  const { data, error } = await supabase.from('records').select('*').order('score',{ascending:false})              
-  loader.style.display="none"              
-  if(error){ console.error(error); return }              
-  if(data.length===0){ emptyMsg.style.display="block" }              
-  data.forEach(r=>addRecord(r.pseudo,r.score,r.image_url))              
-}              
-              
-loadRecords()              
-</script>              
-</body>              
+
+function removeForm() {
+  if (dynamicForm) {
+    dynamicForm.classList.remove("show")
+    setTimeout(() => { dynamicForm.remove(); dynamicForm = null }, 300)
+  }
+  svgIcon.style.transform = "rotate(0deg)"
+  formOpen = false
+}
+
+// --- Ajouter record ---
+function addRecord(pseudo, score, img, id) {
+  const li = document.createElement("li")
+  li.className = "message"
+  li.dataset.id = id
+  li.dataset.score = score
+  li.innerHTML = `
+    <div class="img-loader"><div class="spinner"></div></div>
+    <img src="${img}">
+    <div class="message-text">
+      <div class="pseudo">${pseudo}</div>
+      <div class="score">${score}</div>
+    </div>
+  `
+  const messageImg = li.querySelector("img")
+  const imgLoader = li.querySelector(".img-loader")
+
+  messageImg.onload = () => {
+    imgLoader.style.display = "none"
+    messageImg.style.display = "block"
+  }
+
+  li.onclick = (e) => {
+    // Empêcher l'ouverture du modal si on clique sur les boutons admin
+    if (e.target.closest('.admin-controls')) return
+    modal.style.display = "flex"
+    modalPseudo.textContent = pseudo
+    modalScore.textContent = score
+    modalImg.src = img
+  }
+
+  // Ajout direct des boutons admin (toujours présents)
+  const controls = document.createElement('div')
+  controls.className = 'admin-controls'
+  controls.innerHTML = `
+    <button class="edit-btn" title="Modifier">✏️</button>
+    <button class="delete-btn" title="Supprimer">🗑️</button>
+  `
+  li.appendChild(controls)
+
+  controls.querySelector('.edit-btn').onclick = (e) => {
+    e.stopPropagation()
+    editRecord(li)
+  }
+  controls.querySelector('.delete-btn').onclick = (e) => {
+    e.stopPropagation()
+    deleteRecord(li)
+  }
+
+  messageList.appendChild(li)
+  sortListDesc()
+  emptyMsg.style.display = "none"
+  messageList.scrollTop = messageList.scrollHeight
+}
+
+function sortListDesc() {
+  const items = Array.from(messageList.querySelectorAll("li"))
+  items.sort((a, b) => parseFloat(b.dataset.score) - parseFloat(a.dataset.score))
+  items.forEach(item => messageList.appendChild(item))
+}
+
+// --- Édition ---
+function editRecord(li) {
+  const id = li.dataset.id
+  const pseudo = li.querySelector('.pseudo').textContent
+  const score = parseFloat(li.querySelector('.score').textContent)
+  const image_url = li.querySelector('img').src
+  openDynamicForm({ id, pseudo, score, image_url })
+}
+
+// --- Suppression ---
+function deleteRecord(li) {
+  currentDeleteLi = li
+  deleteConfirmText.textContent = `Supprimer le record de ${li.querySelector('.pseudo').textContent} ?`
+  deletePopup.style.display = "flex"
+}
+
+// --- Événements ---
+plusBtn.onclick = () => {
+  if (!formOpen) {
+    openDynamicForm(null)
+  } else {
+    popupOverlay.style.display = "flex"
+  }
+}
+ouiBtn.onclick = () => { popupOverlay.style.display = "none"; removeForm() }
+nonBtn.onclick = () => popupOverlay.style.display = "none"
+
+deleteOuiBtn.onclick = async () => {
+  deletePopup.style.display = "none"
+  if (!currentDeleteLi) return
+
+  const id = currentDeleteLi.dataset.id
+  loader.style.display = "flex"
+
+  const { error } = await supabase.from('records').delete().eq('id', id)
+  if (error) {
+    alert("Erreur suppression : " + error.message)
+    loader.style.display = "none"
+    return
+  }
+
+  currentDeleteLi.remove()
+  loader.style.display = "none"
+
+  if (messageList.children.length === 0) {
+    emptyMsg.style.display = "block"
+  }
+  currentDeleteLi = null
+}
+
+deleteNonBtn.onclick = () => {
+  deletePopup.style.display = "none"
+  currentDeleteLi = null
+}
+
+closeModal.onclick = () => modal.style.display = "none"
+window.onclick = e => { if (e.target === modal) modal.style.display = "none" }
+
+// --- Charger les records ---
+async function loadRecords() {
+  loader.style.display = "flex"
+  const { data, error } = await supabase.from('records').select('*').order('score', { ascending: false })
+  loader.style.display = "none"
+  if (error) { console.error(error); return }
+  if (data.length === 0) { emptyMsg.style.display = "block" }
+  data.forEach(r => addRecord(r.pseudo, r.score, r.image_url, r.id))
+}
+
+loadRecords()
+</script>
+</body>
 </html>
